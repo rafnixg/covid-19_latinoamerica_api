@@ -27,3 +27,5 @@ _templates
 # javascript
 package-lock.json
 
+# Data
+data
