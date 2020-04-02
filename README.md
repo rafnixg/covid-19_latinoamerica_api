@@ -36,3 +36,5 @@ El API se actualiza automaticamente cada hora en base a los archivos del reposit
 export FLASK_APP=app.py
 flask run
 ```
+
+Version online del API en [https://covid19latam.herokuapp.com/](https://covid19latam.herokuapp.com/)
