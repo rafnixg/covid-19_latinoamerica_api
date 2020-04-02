@@ -9,8 +9,16 @@ Creamos entorno virtual en python e instalamos las dependencias
 ```bash
 $ python3 -m venv venv
 $ source venv/bin/activate
-$ pip3 install -r requeriments.txt
+$ pip3 install -r requirements.txt
 ```
+
+O en Anaconda
+```bash
+$ conda create -n covid19 python=3.7 --y
+$ conda activate covid19
+$ pip install -r requirements.txt
+```
+
 
 ## ETL
 
@@ -21,6 +29,8 @@ $ python3 etl.py
 ```
 
 ## API
+El API se actualiza automaticamente cada hora en base a los archivos del repositorio [covid-19_latinoamerica](https://github.com/DataScienceResearchPeru/covid-19_latinoamerica)
+
 
 ```bash
 export FLASK_APP=app.py
