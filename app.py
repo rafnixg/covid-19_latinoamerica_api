@@ -88,7 +88,20 @@ class GetDataByCountryRegion(Resource):
         out = df_tmp.to_dict(orient='records')
         return out
 
-
+@api.route('/ultima-actualizacion')
+class GetLastUpdateDate(Resource):
+    def get(self):
+        df = pd.read_csv('data.csv')
+        countries=[]
+        lastUpdateOn=[]
+        for country in df["Country/Region"].unique():
+            df_tmp = df[(df["Country/Region"]==country) & (df["Confirmed"]>0)]
+            print(df_tmp[df_tmp.Date == df_tmp["Date"].max()])
+            lastUpdateOn.append(df_tmp["Date"].max())
+            countries.append(country)
+        df_out = pd.DataFrame({"Country/Region":countries, "Ultima Actualization": lastUpdateOn})
+        out = df_out.to_dict(orient='records')
+        return out
 
 
 if __name__ == '__main__':
