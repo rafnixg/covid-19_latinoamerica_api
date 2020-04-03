@@ -78,6 +78,17 @@ class GetCountrySummary(Resource):
         out = df_tmp.to_dict(orient='records')
         return out
 
+@api.route('/resumen-pais-provincia')
+class GetDataByCountryRegion(Resource):
+    def get(self):
+        df = pd.read_csv('data.csv')
+        df_tmp = df.groupby(by=["Country/Region","Province/State"]).sum()
+        df_tmp.reset_index(inplace=True)
+        print(df_tmp)
+        out = df_tmp.to_dict(orient='records')
+        return out
+
+
 
 
 if __name__ == '__main__':
