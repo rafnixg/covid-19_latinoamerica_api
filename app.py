@@ -57,6 +57,28 @@ class GetDataByCountry(Resource):
         out = df_tmp.to_dict(orient='records')
         return out
 
+@api.route('/paises-disponibles')
+class GetCountries(Resource):
+    """Countries in database."""
+    def get(self):
+        """GET method."""
+        df = pd.read_csv('data.csv')
+        df_tmp = df["Country/Region"].unique()
+        out = dict(enumerate(df_tmp, 1))
+        return out
+
+@api.route('/resumen-por-pais')
+class GetCountrySummary(Resource):
+    """Summary by country."""
+    def get(self):
+        """GET method."""
+        df = pd.read_csv('data.csv')
+        df_tmp = df.groupby(by="Country/Region").sum()
+        df_tmp.reset_index(inplace=True)
+        out = df_tmp.to_dict(orient='records')
+        return out
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
