@@ -13,6 +13,7 @@ from etl import etl
 
 sys.path.append("./")
 
+
 # Function to fetch data from csv repository
 def updateData():
     """Function to update dataset."""
@@ -21,6 +22,8 @@ def updateData():
     data.to_csv('data.csv', index=False)
     print(f"[INFO] Data has been updated on {datetime.now}.")
 
+# Initialize data
+updateData()
 
 # and update data every hour
 sched = BackgroundScheduler(daemon=True)
@@ -92,15 +95,14 @@ class GetDataByCountryRegion(Resource):
 class GetLastUpdateDate(Resource):
     def get(self):
         df = pd.read_csv('data.csv')
-        countries=[]
-        lastUpdateOn=[]
-        for country in df["Country/Region"].unique():
-            df_tmp = df[(df["Country/Region"]==country) & (df["Confirmed"]>0)]
-            print(df_tmp[df_tmp.Date == df_tmp["Date"].max()])
-            lastUpdateOn.append(df_tmp["Date"].max())
-            countries.append(country)
-        df_out = pd.DataFrame({"Country/Region":countries, "Ultima Actualization": lastUpdateOn})
-        out = df_out.to_dict(orient='records')
+        df_tmp = df[df["Confirmed"]>0]
+        df_tmp = df_tmp[["Country/Region","Date"]]
+        df_tmp["Date"]=pd.to_datetime(df_tmp["Date"],format="%Y-%m-%d")
+        df_tmp = df_tmp.loc[df_tmp.groupby('Country/Region')['Date'].idxmax()]
+        df_tmp.drop_duplicates(inplace=True)
+        df_tmp["Last Update"] = df_tmp["Date"].astype(str)
+        df_tmp = df_tmp[["Country/Region","Last Update"]]
+        out = df_tmp.to_dict(orient='records')
         return out
 
 
