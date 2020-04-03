@@ -1,2 +1,2 @@
 web: gunicorn app:app
-clock: python cron.py
+clock: python etl_job.py
