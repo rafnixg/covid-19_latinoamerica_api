@@ -30,6 +30,7 @@ sched = BackgroundScheduler(daemon=True)
 sched.add_job(updateData, 'interval', minutes=60)
 sched.start()
 
+
 # Start webservice
 app = Flask(__name__)
 CORS(app)
@@ -105,6 +106,11 @@ class GetLastUpdateDate(Resource):
         out = df_tmp.to_dict(orient='records')
         return out
 
+@api.route('/forzar-actualization')
+class ForceUpdate(Resource):
+    def get(self):
+        updateData()
+        return {'Actualization': str(datetime.now())}
 
 if __name__ == '__main__':
     app.run(debug=True)
