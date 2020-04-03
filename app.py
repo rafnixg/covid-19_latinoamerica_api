@@ -5,7 +5,6 @@ from flask import jsonify
 from flask_restplus import Resource, Api, fields
 import pandas as pd
 import numpy as np
-from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
 import requests
 import sys
@@ -22,13 +21,9 @@ def updateData():
     data.to_csv('data.csv', index=False)
     print(f"[INFO] Data has been updated on {datetime.now}.")
 
+
 # Initialize data
 updateData()
-
-# and update data every hour
-sched = BackgroundScheduler(daemon=True)
-sched.add_job(updateData, 'interval', minutes=60)
-sched.start()
 
 
 # Start webservice
@@ -61,9 +56,11 @@ class GetDataByCountry(Resource):
         out = df_tmp.to_dict(orient='records')
         return out
 
+
 @api.route('/paises-disponibles')
 class GetCountries(Resource):
     """Countries in database."""
+
     def get(self):
         """GET method."""
         df = pd.read_csv('data.csv')
@@ -71,9 +68,11 @@ class GetCountries(Resource):
         out = dict(enumerate(df_tmp, 1))
         return out
 
+
 @api.route('/resumen-por-pais')
 class GetCountrySummary(Resource):
     """Summary by country."""
+
     def get(self):
         """GET method."""
         df = pd.read_csv('data.csv')
@@ -82,35 +81,48 @@ class GetCountrySummary(Resource):
         out = df_tmp.to_dict(orient='records')
         return out
 
+
 @api.route('/resumen-pais-provincia')
 class GetDataByCountryRegion(Resource):
+    """Summary by country and region."""
+
     def get(self):
+        """GET method."""
         df = pd.read_csv('data.csv')
-        df_tmp = df.groupby(by=["Country/Region","Province/State"]).sum()
+        df_tmp = df.groupby(by=["Country/Region", "Province/State"]).sum()
         df_tmp.reset_index(inplace=True)
         print(df_tmp)
         out = df_tmp.to_dict(orient='records')
         return out
 
+
 @api.route('/ultima-actualizacion')
 class GetLastUpdateDate(Resource):
+    """Last update."""
+
     def get(self):
+        """GET method."""
         df = pd.read_csv('data.csv')
-        df_tmp = df[df["Confirmed"]>0]
-        df_tmp = df_tmp[["Country/Region","Date"]]
-        df_tmp["Date"]=pd.to_datetime(df_tmp["Date"],format="%Y-%m-%d")
+        df_tmp = df[df["Confirmed"] > 0]
+        df_tmp = df_tmp[["Country/Region", "Date"]]
+        df_tmp["Date"] = pd.to_datetime(df_tmp["Date"], format="%Y-%m-%d")
         df_tmp = df_tmp.loc[df_tmp.groupby('Country/Region')['Date'].idxmax()]
         df_tmp.drop_duplicates(inplace=True)
         df_tmp["Last Update"] = df_tmp["Date"].astype(str)
-        df_tmp = df_tmp[["Country/Region","Last Update"]]
+        df_tmp = df_tmp[["Country/Region", "Last Update"]]
         out = df_tmp.to_dict(orient='records')
         return out
 
+
 @api.route('/forzar-actualization')
 class ForceUpdate(Resource):
+    """Force Update."""
+
     def get(self):
+        """GET method."""
         updateData()
         return {'Actualization': str(datetime.now())}
+
 
 if __name__ == '__main__':
     app.run(debug=True)
