@@ -51,8 +51,10 @@ def etl():
 
     df = pd.concat(files, axis=0, ignore_index=True, sort=False)
 
+    _logger.info(f'Updating data')
     print("[INFO] Updating data")
     data.to_csv('data.csv', index=False)
+    _logger.info(f'Data has been updated on {datetime.now}')
     print(f"[INFO] Data has been updated on {datetime.now}.")
 
 sched.start()
