@@ -5,11 +5,11 @@ import requests
 import os
 from datetime import date, timedelta, datetime
 import logging
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 _logger = logging.getLogger(__name__)
 
-sched = BackgroundScheduler()
+sched = BlockingScheduler()
 
 
 @sched.scheduled_job('interval', minutes=60)
