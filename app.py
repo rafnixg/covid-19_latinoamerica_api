@@ -52,7 +52,7 @@ class GetDataByCountry(Resource):
     def get(self, id):
         """GET method."""
         df = pd.read_csv('data.csv')
-        df_tmp = df[df["Country/Region"] == str(id).capitalize()]
+        df_tmp = df[df["Country"] == str(id).capitalize()]
         out = df_tmp.to_dict(orient='records')
         return out
 
@@ -64,7 +64,7 @@ class GetCountries(Resource):
     def get(self):
         """GET method."""
         df = pd.read_csv('data.csv')
-        df_tmp = df["Country/Region"].unique()
+        df_tmp = df["Country"].unique()
         out = dict(enumerate(df_tmp, 1))
         return out
 
@@ -76,7 +76,7 @@ class GetCountrySummary(Resource):
     def get(self):
         """GET method."""
         df = pd.read_csv('data.csv')
-        df_tmp = df.groupby(by="Country/Region").sum()
+        df_tmp = df.groupby(by="Country").sum()
         df_tmp.reset_index(inplace=True)
         out = df_tmp.to_dict(orient='records')
         return out
@@ -89,7 +89,7 @@ class GetDataByCountryRegion(Resource):
     def get(self):
         """GET method."""
         df = pd.read_csv('data.csv')
-        df_tmp = df.groupby(by=["Country/Region", "Province/State"]).sum()
+        df_tmp = df.groupby(by=["Country", "Subdivision"]).sum()
         df_tmp.reset_index(inplace=True)
         print(df_tmp)
         out = df_tmp.to_dict(orient='records')
@@ -104,12 +104,12 @@ class GetLastUpdateDate(Resource):
         """GET method."""
         df = pd.read_csv('data.csv')
         df_tmp = df[df["Confirmed"] > 0]
-        df_tmp = df_tmp[["Country/Region", "Date"]]
+        df_tmp = df_tmp[["Country", "Date"]]
         df_tmp["Date"] = pd.to_datetime(df_tmp["Date"], format="%Y-%m-%d")
-        df_tmp = df_tmp.loc[df_tmp.groupby('Country/Region')['Date'].idxmax()]
+        df_tmp = df_tmp.loc[df_tmp.groupby('Country')['Date'].idxmax()]
         df_tmp.drop_duplicates(inplace=True)
         df_tmp["Last Update"] = df_tmp["Date"].astype(str)
-        df_tmp = df_tmp[["Country/Region", "Last Update"]]
+        df_tmp = df_tmp[["Country", "Last Update"]]
         out = df_tmp.to_dict(orient='records')
         return out
 
