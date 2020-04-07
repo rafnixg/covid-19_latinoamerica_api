@@ -29,7 +29,7 @@ $ python3 etl.py
 ```
 
 ## API
-El API se actualiza automaticamente cada hora en base a los archivos del repositorio [covid-19_latinoamerica](https://github.com/DataScienceResearchPeru/covid-19_latinoamerica)
+El API se actualiza automáticamente cada hora en base a los archivos del repositorio [covid-19_latinoamerica](https://github.com/DataScienceResearchPeru/covid-19_latinoamerica)
 
 
 ```bash
@@ -37,4 +37,4 @@ export FLASK_APP=app.py
 flask run
 ```
 
-Version online del API en [https://covid19latam.herokuapp.com/](https://covid19latam.herokuapp.com/)
+Versión online del API en [https://covid19latam.herokuapp.com/](https://covid19latam.herokuapp.com/)
