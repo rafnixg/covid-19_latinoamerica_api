@@ -31,7 +31,7 @@ app = Flask(__name__)
 CORS(app)
 api = Api(app,
           version="COVID19 Latin America API",
-          description="API para extraer casos de COVID19 por pais en Latinoamerica")
+          description="API para extraer casos de COVID19 por país en Latinoamérica")
 
 
 @api.route('/data')
