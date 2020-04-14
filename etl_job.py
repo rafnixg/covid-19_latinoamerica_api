@@ -31,7 +31,7 @@ def etl():
     for file in dates:
         file = file.strftime("%Y-%m-%d")
         print(file)
-        url = r"https://raw.githubusercontent.com/DataScienceResearchPeru/covid-19_latinoamerica/master/latam_covid_19_data/latam_covid_19_daily_reports/{date}.csv".format(date=file)
+        url = r"https://raw.githubusercontent.com/DataScienceResearchPeru/covid-19_latinoamerica/master/daily_reports/{date}.csv".format(date=file)
         raw_string = requests.get(url).content
         if b'404: Not Found\n' not in raw_string:
             try:
